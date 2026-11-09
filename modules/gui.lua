@@ -52,7 +52,7 @@ function _G.init(shared)
     local _tt = _N("TextLabel", {Text="0xC76B", Font=Enum.Font.GothamBlack, TextSize=11, TextColor3=Color3.new(1,1,1), TextXAlignment=Enum.TextXAlignment.Left, BackgroundTransparency=1, Position=UDim2.fromOffset(8,0), Size=UDim2.new(0, 45, 1, 0), ZIndex=3, Parent=_tb})
     local _ttg = _N("UIGradient", {Color=ColorSequence.new{ColorSequenceKeypoint.new(0, _H.acc2), ColorSequenceKeypoint.new(1, _H.acc)}, Parent=_tt})
     
-    local _mb = _N("TextLabel", {Text="| Hub Edition", Font=Enum.Font.GothamBold, TextSize=8, TextColor3=Color3.new(1,1,1), TextXAlignment=Enum.TextXAlignment.Left, BackgroundTransparency=1, Position=UDim2.fromOffset(52,0), Size=UDim2.new(1,-100,1,0), ZIndex=3, Parent=_tb})
+    local _mb = _N("TextLabel", {Text="| Made By Skiee China boi", Font=Enum.Font.GothamBold, TextSize=8, TextColor3=Color3.new(1,1,1), TextXAlignment=Enum.TextXAlignment.Left, BackgroundTransparency=1, Position=UDim2.fromOffset(52,0), Size=UDim2.new(1,-100,1,0), ZIndex=3, Parent=_tb})
     local _mbg = _N("UIGradient", {Color=ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 0)), ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 255))}, Parent=_mb})
 
     local function _btn(t, xOff)
