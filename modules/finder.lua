@@ -41,12 +41,7 @@ function _M.init(_s)
     _ly.Padding = UDim.new(0, 6)
     _ly.Parent = _cn
     
-    local function _clr()
-        for _k, _v in pairs(_map) do _v.g:Destroy() end
-        _map = {}
-    end
-    
-    local function _bld(_pt, _idx)
+    local function _bld(_val, _idx)
         local _r = Instance.new("Frame")
         _r.Size = UDim2.new(1, 0, 0, 40)
         _r.BackgroundColor3 = Color3.fromRGB(26, 32, 46)
@@ -79,8 +74,8 @@ function _M.init(_s)
         _b.MouseButton1Click:Connect(function()
             local _ch = _L.Character
             local _h = _ch and _ch:FindFirstChild("HumanoidRootPart")
-            if _h and _pt.Parent then
-                _h.CFrame = CFrame.new(_pt.Position + Vector3.new(0, 5, 0))
+            if _h and _val.Parent then
+                _h.CFrame = CFrame.new(_val.Value + Vector3.new(0, 5, 0))
             end
         end)
         
@@ -91,39 +86,40 @@ function _M.init(_s)
         while true do
             task.wait(1.5)
             if _isActive then
-                local _ch = _L.Character
-                local _h = _ch and _ch:FindFirstChild("HumanoidRootPart")
-                local _fd = {}
+                local _folder = workspace:FindFirstChild("LaserLimitedTitik")
+                local _vals = {}
                 
-                for _, _v in ipairs(workspace:GetDescendants()) do
-                    if _v.Name:lower():find("laserlimitedtitik") and (_v:IsA("BasePart") or _v:IsA("Model")) then
-                        local _pt = _v:IsA("BasePart") and _v or _v:FindFirstChildWhichIsA("BasePart", true)
-                        if _pt then table.insert(_fd, _pt) end
+                if _folder then
+                    for _, _v in ipairs(_folder:GetChildren()) do
+                        if _v:IsA("Vector3Value") then
+                            table.insert(_vals, _v)
+                        end
                     end
                 end
                 
-                if #_fd == 0 then
+                if #_vals == 0 then
                     _lw.Visible = true
-                    _clr()
+                    for _k, _v in pairs(_map) do _v.g:Destroy() end
+                    _map = {}
                 else
                     _lw.Visible = false
                     
                     for _k, _v in pairs(_map) do
-                        if not _k.Parent or not table.find(_fd, _k) then
+                        if not _k.Parent or not table.find(_vals, _k) then
                             _v.g:Destroy()
                             _map[_k] = nil
                         end
                     end
                     
-                    for _i, _pt in ipairs(_fd) do
-                        if not _map[_pt] then
-                            _map[_pt] = _bld(_pt, _i)
+                    local _ch = _L.Character
+                    local _h = _ch and _ch:FindFirstChild("HumanoidRootPart")
+                    
+                    for _i, _v in ipairs(_vals) do
+                        if not _map[_v] then
+                            _map[_v] = _bld(_v, _i)
                         end
-                        local _ui = _map[_pt]
                         if _h then
-                            _ui.t.Text = "Laser #" .. _i .. " | Jarak: " .. math.floor((_pt.Position - _h.Position).Magnitude) .. " studs"
-                        else
-                            _ui.t.Text = "Laser #" .. _i .. " | Jarak: -"
+                            _map[_v].t.Text = "Laser #" .. _i .. " | Jarak: " .. math.floor((_v.Value - _h.Position).Magnitude) .. " studs"
                         end
                     end
                 end
