@@ -1,7 +1,7 @@
 local _M = {}
 
 function _M.init(_s)
-    local _t = _s.modules.gui.tab("Teleport", "rbxassetid://6031091051")
+    local _t = _s.modules.gui.tab("Teleport", "rbxassetid://10709798628")
     local _p = game:GetService("Players").LocalPlayer
     local _ts = game:GetService("TweenService")
     
