@@ -9,9 +9,6 @@ local _L = _P.LocalPlayer
 
 local _PE = _RS:WaitForChild("AddonEvents"):WaitForChild("PaketEvent")
 
-local _GS, _GI = {}, 0
-local _AS, _AI = {}, 0
-
 local function _iaD(_c)
     local _h = _c:WaitForChild("Humanoid", 5)
     if not _h then return end
@@ -126,47 +123,6 @@ local function _isC()
     return false
 end
 
-local function _sM(_kw)
-    local _fd = {}
-    for _, _v in ipairs(workspace:GetDescendants()) do
-        if _v:IsA("BasePart") or _v:IsA("Model") then
-            local _n = _v.Name:lower()
-            for _, _k in ipairs(_kw) do
-                if _n:find(_k, 1, true) then
-                    local _p = _v:IsA("BasePart") and _v or _v:FindFirstChildWhichIsA("BasePart", true)
-                    if _p then table.insert(_fd, _p) break end
-                end
-            end
-        end
-    end
-    return _fd
-end
-
-local function _tTN(_sp, _ix, _bt, _lb, _cl)
-    if #_sp == 0 or _ix >= #_sp then
-        local _kw = _lb == "GEMBOK" and {"gembok", "lock", "padlock", "vault", "kunci"} or {"anomali", "glitch", "error", "hidden", "secret", "weird", "rare"}
-        _sp = _sM(_kw); _ix = 1
-    else _ix = _ix + 1 end
-
-    if #_sp == 0 then
-        _bt.Text = _lb .. " NOT FOUND!"
-        task.delay(2, function() _bt.Text = _lb .. " FINDER" end)
-        return _sp, _ix
-    end
-    local _tg = _sp[_ix]
-    local _c = _L.Character
-    if _c and _c:FindFirstChild("HumanoidRootPart") then
-        _c:PivotTo(_tg.CFrame * CFrame.new(0, 5, 5))
-        _bt.Text = _lb .. " (" .. _ix .. "/" .. #_sp .. ")"
-        if not _tg:FindFirstChild("FinderHL") then
-            local _hl = Instance.new("Highlight")
-            _hl.Name = "FinderHL"; _hl.FillColor = _cl; _hl.OutlineColor = _cl
-            _hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop; _hl.Adornee = _tg; _hl.Parent = _tg
-        end
-    end
-    return _sp, _ix
-end
-
 task.spawn(function()
     while true do
         task.wait(_TR)
@@ -218,29 +174,6 @@ function _M.init(shared)
             _sC(true)
         end
     end)
-    
-    local _gb
-    _gb = _t.button("GEMBOK FINDER", function()
-        _GS, _GI = _tTN(_GS, _GI, _gb, "GEMBOK", Color3.fromRGB(255, 255, 0))
-    end)
-    
-    local _ab
-    _ab = _t.button("ANOMALI FINDER", function()
-        _AS, _AI = _tTN(_AS, _AI, _ab, "ANOMALI", Color3.fromRGB(255, 0, 255))
-    end)
-
-    local _cb
-    _cb = _t.button("CLEAR HIGHLIGHTS", function()
-        for _, _v in ipairs(workspace:GetDescendants()) do
-            if _v:IsA("Highlight") and _v.Name == "FinderHL" then _v:Destroy() end
-        end
-        _GS, _GI = {}, 0
-        _AS, _AI = {}, 0
-        _gb.Text = "GEMBOK FINDER"
-        _ab.Text = "ANOMALI FINDER"
-        _cb.Text = "CLEARED!"
-        task.delay(1, function() _cb.Text = "CLEAR HIGHLIGHTS" end)
-    end)
 end
 
-return _M 
+return _M
