@@ -45,7 +45,7 @@ function _GU.init(shared)
     _N("UICorner", {CornerRadius=UDim.new(0,6), Parent=_tb})
     
     _N("TextLabel", {Text="0xC76B", Font=Enum.Font.GothamBlack, TextSize=12, TextColor3=_H.acc, TextXAlignment=Enum.TextXAlignment.Left, BackgroundTransparency=1, Position=UDim2.fromOffset(10,0), Size=UDim2.new(0, 50, 1, 0), ZIndex=3, Parent=_tb})
-    _N("TextLabel", {Text="| Hub Edition", Font=Enum.Font.GothamBold, TextSize=9, TextColor3=_H.sub, TextXAlignment=Enum.TextXAlignment.Left, BackgroundTransparency=1, Position=UDim2.fromOffset(60,0), Size=UDim2.new(1,-120,1,0), ZIndex=3, Parent=_tb})
+    _N("TextLabel", {Text="| By Skiee China boi", Font=Enum.Font.GothamBold, TextSize=9, TextColor3=_H.sub, TextXAlignment=Enum.TextXAlignment.Left, BackgroundTransparency=1, Position=UDim2.fromOffset(60,0), Size=UDim2.new(1,-120,1,0), ZIndex=3, Parent=_tb})
 
     local function _btn(t, xOff)
         local b = _N("TextButton", {Text=t, Font=Enum.Font.GothamBold, TextSize=14, TextColor3=_H.sub, BackgroundColor3=_H.row, AutoButtonColor=false, Size=UDim2.fromOffset(24,24), Position=UDim2.new(1,xOff,0.5,-12), ZIndex=3, Parent=_tb})
@@ -216,4 +216,4 @@ function _GU.selectFirst()
     if _T["Packet"] then _sel("Packet") else local f = next(_T) if f then _sel(f) end end
 end
 
-return _GU
+return _GU 
