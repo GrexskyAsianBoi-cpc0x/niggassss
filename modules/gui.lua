@@ -31,7 +31,7 @@ function _G.init(shared)
     pcall(function() _g.Parent = (gethui and gethui()) or game:GetService("CoreGui") end)
     if not _g.Parent then _g.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui") end
 
-    local _WW, _WH, _TH, _SW = 360, 240, 34, 48
+    local _WW, _WH, _TH, _SW = 360, 280, 34, 48
     _M = _N("Frame", {
         Name="Main", Size=UDim2.fromOffset(0,0), Position=UDim2.new(0.5,-_WW/2,0.5,-_WH/2),
         BackgroundColor3=_H.bg, BorderSizePixel=0, ClipsDescendants=true, Parent=_g})
@@ -109,27 +109,27 @@ function _G.init(shared)
     end)
 end
 
+local function _sel(name)
+    for _k, o in pairs(_T) do
+        o._p.Visible = (_k == name)
+        o._s.Color = (_k == name) and _H.acc or _H.str
+        o._s.Thickness = (_k == name) and 2 or 1
+        o._i.ImageColor3 = (_k == name) and _H.txt or _H.sub
+    end
+    _A = name
+end
+
 function _G.tab(name, icon)
     if _T[name] then return _T[name] end
-    local _p = _N("Frame", {Size=UDim2.fromScale(1,1), BackgroundTransparency=1, Visible=false, Parent=_C})
+    local _p = _N("ScrollingFrame", {Size=UDim2.fromScale(1,1), BackgroundTransparency=1, Visible=false, Parent=_C, ScrollBarThickness=2, CanvasSize=UDim2.new(0,0,0,0), AutomaticCanvasSize=Enum.AutomaticSize.Y})
     _N("UIListLayout", {Padding=UDim.new(0,6), SortOrder=Enum.SortOrder.LayoutOrder, Parent=_p})
 
     local _tb = _N("TextButton", {Size=UDim2.fromOffset(36,36), BackgroundColor3=_H.bg, Text="", AutoButtonColor=false, LayoutOrder=#_T+1, ZIndex=3, Parent=_B})
     _N("UICorner", {CornerRadius=UDim.new(0,6), Parent=_tb})
     local _s = _N("UIStroke", {Color=_H.str, Thickness=1, Parent=_tb})
-    local _i = _N("ImageLabel", {Size=UDim2.fromOffset(22,22), Position=UDim2.fromScale(0.5,0.5), AnchorPoint=Vector2.new(0.5,0.5), BackgroundTransparency=1, Image=icon or "rbxassetid://6031091004", ImageColor3=_H.sub, ZIndex=3, Parent=_tb})
+    local _i = _N("ImageLabel", {Size=UDim2.fromOffset(22,22), Position=UDim2.fromScale(0.5,0.5), AnchorPoint=Vector2.new(0.5,0.5), BackgroundTransparency=1, Image=icon, ImageColor3=_H.sub, ZIndex=3, Parent=_tb})
 
-    _tb.MouseButton1Click:Connect(function()
-        for _, o in pairs(_T) do
-            o._p.Visible = false
-            o._s.Color = _H.str; o._s.Thickness = 1
-            o._i.ImageColor3 = _H.sub
-        end
-        _p.Visible = true
-        _s.Color = _H.acc; _s.Thickness = 2
-        _i.ImageColor3 = _H.txt
-        _A = name
-    end)
+    _tb.MouseButton1Click:Connect(function() _sel(name) end)
 
     local _api = { _p = _p, _tb = _tb, _s = _s, _i = _i }
 
@@ -140,13 +140,78 @@ function _G.tab(name, icon)
         return b
     end
 
+    function _api.toggle(text, def, cb)
+        local b = _N("TextButton", {Text="", BackgroundColor3=_H.row, AutoButtonColor=false, Size=UDim2.new(1,0,0,36), ZIndex=2, Parent=_p})
+        _N("UICorner", {CornerRadius=UDim.new(0,6), Parent=b})
+        _N("TextLabel", {Text=text, Font=Enum.Font.GothamBlack, TextSize=12, TextColor3=Color3.new(1,1,1), BackgroundTransparency=1, Position=UDim2.fromOffset(10,0), Size=UDim2.new(1,-50,1,0), TextXAlignment=Enum.TextXAlignment.Left, Parent=b})
+        
+        local ind = _N("Frame", {Size=UDim2.fromOffset(30,14), Position=UDim2.new(1,-40,0.5,-7), BackgroundColor3=def and _H.acc or Color3.fromRGB(50,50,58), Parent=b})
+        _N("UICorner", {CornerRadius=UDim.new(1,0), Parent=ind})
+        
+        local st = def
+        b.MouseButton1Click:Connect(function()
+            st = not st
+            ind.BackgroundColor3 = st and _H.acc or Color3.fromRGB(50,50,58)
+            cb(st)
+        end)
+        return b
+    end
+
+    function _api.slider(text, min, max, def, cb)
+        local b = _N("TextButton", {Text="", BackgroundColor3=_H.row, AutoButtonColor=false, Size=UDim2.new(1,0,0,40), ZIndex=2, Parent=_p})
+        _N("UICorner", {CornerRadius=UDim.new(0,6), Parent=b})
+        _N("TextLabel", {Text=text, Font=Enum.Font.GothamBlack, TextSize=11, TextColor3=Color3.new(1,1,1), BackgroundTransparency=1, Position=UDim2.fromOffset(10,2), Size=UDim2.new(1,-50,0,20), TextXAlignment=Enum.TextXAlignment.Left, Parent=b})
+        local vl = _N("TextLabel", {Text=tostring(def), Font=Enum.Font.GothamBold, TextSize=11, TextColor3=_H.acc, BackgroundTransparency=1, Position=UDim2.new(1,-50,0,2), Size=UDim2.new(0,40,0,20), TextXAlignment=Enum.TextXAlignment.Right, Parent=b})
+        
+        local tr = _N("Frame", {Size=UDim2.new(1,-20,0,4), Position=UDim2.new(0,10,1,-10), BackgroundColor3=Color3.fromRGB(50,50,58), Parent=b})
+        _N("UICorner", {CornerRadius=UDim.new(1,0), Parent=tr})
+        local fl = _N("Frame", {Size=UDim2.new((def-min)/(max-min),0,1,0), BackgroundColor3=_H.acc, Parent=tr})
+        _N("UICorner", {CornerRadius=UDim.new(1,0), Parent=fl})
+        
+        local drag = false
+        local function upd(x)
+            local r = math.clamp((x - tr.AbsolutePosition.X) / tr.AbsoluteSize.X, 0, 1)
+            local v = math.floor(min + (max-min)*r + 0.5)
+            fl.Size = UDim2.new(r,0,1,0)
+            vl.Text = tostring(v)
+            cb(v)
+        end
+        tr.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then drag = true; upd(i.Position.X) end end)
+        _I.InputChanged:Connect(function(i) if drag and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then upd(i.Position.X) end end)
+        _I.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then drag = false end end)
+        return b
+    end
+
+    function _api.dropdown(text, opts, def, cb)
+        local b = _N("TextButton", {Text="", BackgroundColor3=_H.row, AutoButtonColor=false, Size=UDim2.new(1,0,0,36), ZIndex=2, Parent=_p})
+        _N("UICorner", {CornerRadius=UDim.new(0,6), Parent=b})
+        _N("TextLabel", {Text=text, Font=Enum.Font.GothamBlack, TextSize=12, TextColor3=Color3.new(1,1,1), BackgroundTransparency=1, Position=UDim2.fromOffset(10,0), Size=UDim2.new(0.5,0,1,0), TextXAlignment=Enum.TextXAlignment.Left, Parent=b})
+        local sl = _N("TextLabel", {Text=tostring(def), Font=Enum.Font.GothamBold, TextSize=11, TextColor3=_H.acc, BackgroundTransparency=1, Position=UDim2.new(0.5,0,0,0), Size=UDim2.new(0.5,-10,1,0), TextXAlignment=Enum.TextXAlignment.Right, Parent=b})
+        
+        local mn = _N("Frame", {Size=UDim2.new(1,0,0,0), AutomaticSize=Enum.AutomaticSize.Y, BackgroundColor3=Color3.fromRGB(20,20,25), Visible=false, Parent=_p})
+        _N("UICorner", {CornerRadius=UDim.new(0,6), Parent=mn})
+        _N("UIListLayout", {Padding=UDim.new(0,2), Parent=mn})
+        
+        for _, o in ipairs(opts) do
+            local ob = _N("TextButton", {Text=o, Font=Enum.Font.Gotham, TextSize=11, TextColor3=_H.txt, BackgroundColor3=_H.row, Size=UDim2.new(1,0,0,28), Parent=mn})
+            _N("UICorner", {CornerRadius=UDim.new(0,4), Parent=ob})
+            ob.MouseButton1Click:Connect(function()
+                sl.Text = o
+                mn.Visible = false
+                cb(o)
+            end)
+        end
+        
+        b.MouseButton1Click:Connect(function() mn.Visible = not mn.Visible end)
+        return b
+    end
+
     _T[name] = _api
     return _api
 end
 
 function _G.selectFirst()
-    local f = next(_T)
-    if f then _T[f]._tb.MouseButton1Click:Fire() end
+    if _T["Packet"] then _sel("Packet") else local f = next(_T) if f then _sel(f) end end
 end
 
 return _G
