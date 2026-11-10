@@ -13,9 +13,7 @@ local function _iaD(_c)
     local _h = _c:WaitForChild("Humanoid", 5)
     if not _h then return end
     _h.BreakJointsOnDeath = false
-    pcall(function() _h:SetStateEnabled(Enum.HumanoidStateType.Seated, false) end)
     _h.HealthChanged:Connect(function(_v) if _A and _v < _h.MaxHealth then _h.Health = _h.MaxHealth end end)
-    _h.Seated:Connect(function(_s) if _s then task.wait(0.05); _h.Sit = false; _h.Jump = true end end)
 end
 _L.CharacterAdded:Connect(_iaD)
 if _L.Character then _iaD(_L.Character) end
@@ -133,7 +131,6 @@ task.spawn(function()
                 local _hm = _c and _c:FindFirstChildOfClass("Humanoid")
                 if not _h or not _hm then return end
                 if _hm.Health < _hm.MaxHealth then _hm.Health = _hm.MaxHealth end
-                if _hm.Sit then _hm.Sit = false; _hm.Jump = true end
                 if _isC() then
                     local _tg = _ftUI()
                     local _cf = _gtCF(_tg)
