@@ -158,7 +158,7 @@ end)
 
 function _M.init(shared)
     _S = shared
-    local _t = _S.modules.gui.tab("Packet", "rbxassetid://6031091004")
+    local _t = _S.modules.gui.tab("Packet", "rbxassetid://10709798907")
     
     local _tb
     _tb = _t.button("AUTO DELIVER  [OFF]", function()
