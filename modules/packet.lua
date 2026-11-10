@@ -158,18 +158,18 @@ end)
 
 function _M.init(shared)
     _S = shared
-    local _t = _S.modules.gui.tab("Packet", "rbxassetid://10709798907")
+    local _t = _S.modules.gui.tab("Packet", Color3.fromRGB(255, 255, 255), "⚡")
     
     local _tb
     _tb = _t.button("AUTO DELIVER  [OFF]", function()
         _A = not _A
         if _A then
             _tb.Text = "AUTO DELIVER  [ON]"
-            _tb.BackgroundColor3 = Color3.fromRGB(240,90,110)
+            _tb.BackgroundColor3 = Color3.fromRGB(200,60,80)
             _sC(false)
         else
             _tb.Text = "AUTO DELIVER  [OFF]"
-            _tb.BackgroundColor3 = Color3.fromRGB(14,27,62)
+            _tb.BackgroundColor3 = Color3.fromRGB(26,32,46)
             pcall(function() _PE:FireServer("Cancel") end)
             _sC(true)
         end
