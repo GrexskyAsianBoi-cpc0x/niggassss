@@ -5,6 +5,21 @@ local _L = _P.LocalPlayer
 function _M.init(_s)
     local _t = _s.modules.gui.tab("Finder", Color3.fromRGB(255, 80, 80), "⚡")
     
+    local _isActive = false
+    local _map = {}
+    
+    _t.dropdown("Select Finder", {"None", "Meteor"}, "None", function(_v)
+        _isActive = (_v == "Meteor")
+        _cn.Visible = _isActive
+        if _isActive then
+            _lw.Visible = (#_map == 0)
+        else
+            _lw.Visible = false
+            for _k, _v2 in pairs(_map) do _v2.g:Destroy() end
+            _map = {}
+        end
+    end)
+    
     local _lw = Instance.new("TextLabel")
     _lw.Size = UDim2.new(1, 0, 0, 40)
     _lw.BackgroundTransparency = 1
@@ -12,19 +27,19 @@ function _M.init(_s)
     _lw.TextColor3 = Color3.fromRGB(150, 160, 180)
     _lw.Font = Enum.Font.GothamBold
     _lw.TextSize = 14
+    _lw.Visible = false
     _lw.Parent = _t._p
     
     local _cn = Instance.new("Frame")
     _cn.Size = UDim2.new(1, 0, 0, 0)
     _cn.AutomaticSize = Enum.AutomaticSize.Y
     _cn.BackgroundTransparency = 1
+    _cn.Visible = false
     _cn.Parent = _t._p
     
     local _ly = Instance.new("UIListLayout")
     _ly.Padding = UDim.new(0, 6)
     _ly.Parent = _cn
-    
-    local _map = {}
     
     local function _clr()
         for _k, _v in pairs(_map) do _v.g:Destroy() end
@@ -75,41 +90,41 @@ function _M.init(_s)
     task.spawn(function()
         while true do
             task.wait(1.5)
-            local _ch = _L.Character
-            local _h = _ch and _ch:FindFirstChild("HumanoidRootPart")
-            local _fd = {}
-            
-            for _, _v in ipairs(workspace:GetDescendants()) do
-                if _v.Name:lower():find("laserlimitedtitik") and (_v:IsA("BasePart") or _v:IsA("Model")) then
-                    local _pt = _v:IsA("BasePart") and _v or _v:FindFirstChildWhichIsA("BasePart", true)
-                    if _pt then table.insert(_fd, _pt) end
+            if _isActive then
+                local _ch = _L.Character
+                local _h = _ch and _ch:FindFirstChild("HumanoidRootPart")
+                local _fd = {}
+                
+                for _, _v in ipairs(workspace:GetDescendants()) do
+                    if _v.Name:lower():find("laserlimitedtitik") and (_v:IsA("BasePart") or _v:IsA("Model")) then
+                        local _pt = _v:IsA("BasePart") and _v or _v:FindFirstChildWhichIsA("BasePart", true)
+                        if _pt then table.insert(_fd, _pt) end
+                    end
                 end
-            end
-            
-            if #_fd == 0 then
-                if not _lw.Visible then
+                
+                if #_fd == 0 then
                     _lw.Visible = true
                     _clr()
-                end
-            else
-                _lw.Visible = false
-                
-                for _k, _v in pairs(_map) do
-                    if not _k.Parent or not table.find(_fd, _k) then
-                        _v.g:Destroy()
-                        _map[_k] = nil
+                else
+                    _lw.Visible = false
+                    
+                    for _k, _v in pairs(_map) do
+                        if not _k.Parent or not table.find(_fd, _k) then
+                            _v.g:Destroy()
+                            _map[_k] = nil
+                        end
                     end
-                end
-                
-                for _i, _pt in ipairs(_fd) do
-                    if not _map[_pt] then
-                        _map[_pt] = _bld(_pt, _i)
-                    end
-                    local _ui = _map[_pt]
-                    if _h then
-                        _ui.t.Text = "Laser #" .. _i .. " | Jarak: " .. math.floor((_pt.Position - _h.Position).Magnitude) .. " studs"
-                    else
-                        _ui.t.Text = "Laser #" .. _i .. " | Jarak: -"
+                    
+                    for _i, _pt in ipairs(_fd) do
+                        if not _map[_pt] then
+                            _map[_pt] = _bld(_pt, _i)
+                        end
+                        local _ui = _map[_pt]
+                        if _h then
+                            _ui.t.Text = "Laser #" .. _i .. " | Jarak: " .. math.floor((_pt.Position - _h.Position).Magnitude) .. " studs"
+                        else
+                            _ui.t.Text = "Laser #" .. _i .. " | Jarak: -"
+                        end
                     end
                 end
             end
